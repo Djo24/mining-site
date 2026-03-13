@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenHash Mining - تعدين العملات الرقمية السحابي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        emerald: {
+                            450: '#10b981',
+                        },
+                        purple: {
+                            550: '#8b5cf6',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px #fbbf24, 0 0 10px #fbbf24' },
+                            '100%': { boxShadow: '0 0 20px #fbbf24, 0 0 30px #f59e0b' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #064e3b 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gold-gradient {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+        }
+        
+        .green-purple-gradient {
+            background: linear-gradient(135deg, #10b981 0%, #8b5cf6 100%);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #fbbf24 0%, #10b981 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+        }
+        
+        .vip-box {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.2) 100%);
+            border: 2px solid #fbbf24;
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+        }
+        
+        .countdown-pulse {
+            animation: pulse-red 2s infinite;
+        }
+        
+        @keyframes pulse-red {
+            0%, 100% { color: #ef4444; transform: scale(1); }
+            50% { color: #f87171; transform: scale(1.1); }
+        }
+        
+        .shimmer-bg {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background-size: 1000px 100%;
+        }
+        
+        .trust-badge {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+    </style>
+</head>
+<body class="text-white overflow-x-hidden">
+
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 glass-effect border-b border-white/10">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full gold-gradient flex items-center justify-center">
+                    <i data-lucide="pickaxe" class="text-white w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gradient">GreenHash</h1>
+                    <p class="text-xs text-gray-400">Cloud Mining</p>
+                </div>
+            </div>
+            
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#plans" class="hover:text-yellow-400 transition">خطط التعدين</a>
+                <a href="#vip" class="hover:text-yellow-400 transition">VIP تسريع</a>
+                <a href="#stats" class="hover:text-yellow-400 transition">إحصائيات</a>
+            </nav>
+            
+            <button class="md:hidden" onclick="toggleMenu()">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+            
+            <button class="hidden md:block gold-gradient px-6 py-2 rounded-full font-bold text-white hover:shadow-lg hover:shadow-yellow-500/50 transition transform hover:scale-105">
+                تسجيل الدخول
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden glass-effect border-t border-white/10 p-4">
+            <a href="#plans" class="block py-2 hover:text-yellow-400">خطط التعدين</a>
+            <a href="#vip" class="block py-2 hover:text-yellow-400">VIP تسريع</a>
+            <a href="#stats" class="block py-2 hover:text-yellow-400">إحصائيات</a>
+            <button class="w-full mt-4 gold-gradient px-6 py-2 rounded-full font-bold">تسجيل الدخول</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl animate-float"></div>
+            <div class="absolute top-40 right-10 w-72 h-72 bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl animate-float" style="animation-delay: 1s;"></div>
+            <div class="absolute bottom-20 left-1/2 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-3xl animate-float" style="animation-delay: 2s;"></div>
+        </div>
+        
+        <div class="container mx-auto text-center relative z-10">
+            <div class="inline-flex items-center gap-2 glass-effect px-4 py-2 rounded-full mb-6 border border-yellow-500/30">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span class="text-sm">النظام يعمل بكفاءة عالية</span>
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                ابدأ رحلة التعدين السحابي<br>
+                <span class="text-gradient">مع GreenHash</span>
+            </h1>
+            
+            <p class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-8">
+                استثمر في التعدين السحابي للعملات الرقمية بأقل تكلفة وأعلى عائد. نضمن لك أرباحاً يومية ثابتة مع أحدث تقنيات التعدين.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#plans" class="gold-gradient px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl hover:shadow-yellow-500/50 transition transform hover:scale-105 flex items-center gap-2">
+                    <span>ابدأ التعدين الآن</span>
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                </a>
+                <a href="#vip" class="glass-effect px-8 py-4 rounded-full font-bold text-lg border border-yellow-500/50 hover:bg-yellow-500/10 transition flex items-center gap-2">
+                    <i data-lucide="zap" class="w-5 h-5 text-yellow-400"></i>
+                    <span>تفعيل VIP</span>
+                </a>
+            </div>
+            
+            <!-- Stats Bar -->
+            <div id="stats" class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                <div class="glass-effect p-4 rounded-2xl border border-white/10">
+                    <div class="text-2xl font-bold text-yellow-400">$2.5M+</div>
+                    <div class="text-sm text-gray-400">إجمالي الأرباح المدفوعة</div>
+                </div>
+                <div class="glass-effect p-4 rounded-2xl border border-white/10">
+                    <div class="text-2xl font-bold text-emerald-400">2M+</div>
+                    <div class="text-sm text-gray-400">مستخدم نشط</div>
+                </div>
+                <div class="glass-effect p-4 rounded-2xl border border-white/10">
+                    <div class="text-2xl font-bold text-purple-400">99.9%</div>
+                    <div class="text-sm text-gray-400">وقت التشغيل</div>
+                </div>
+                <div class="glass-effect p-4 rounded-2xl border border-white/10">
+                    <div class="text-2xl font-bold text-blue-400">24/7</div>
+                    <div class="text-sm text-gray-400">دعم فني</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Indicators -->
+    <section class="py-10 px-4 bg-black/20">
+        <div class="container mx-auto">
+            <div class="flex flex-wrap justify-center items-center gap-6 md:gap-12">
+                <div class="trust-badge px-6 py-3 rounded-full flex items-center gap-2">
+                    <i data-lucide="shield-check" class="text-emerald-400 w-6 h-6"></i>
+                    <span class="font-semibold">مرخص من هيئة الخدمات المالية</span>
+                </div>
+                <div class="trust-badge px-6 py-3 rounded-full flex items-center gap-2">
+                    <i data-lucide="users" class="text-blue-400 w-6 h-6"></i>
+                    <span class="font-semibold">أكثر من 2 مليون مستخدم موثوق</span>
+                </div>
+                <div class="trust-badge px-6 py-3 rounded-full flex items-center gap-2">
+                    <i data-lucide="lock" class="text-purple-400 w-6 h-6"></i>
+                    <span class="font-semibold">تشفير SSL 256-bit</span>
+                </div>
+                <div class="trust-badge px-6 py-3 rounded-full flex items-center gap-2">
+                    <i data-lucide="award" class="text-yellow-400 w-6 h-6"></i>
+                    <span class="font-semibold">جائزة أفضل منصة تعدين 2024</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mining Plans -->
+    <section id="plans" class="py-20 px-4">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">خطط التعدين الاستثمارية</h2>
+                <p class="text-gray-400">اختر الخطة المناسبة لك وابدأ في جني الأرباح فوراً</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Beginner Plan -->
+                <div class="glass-effect rounded-3xl p-8 card-hover border border-emerald-500/30 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 mx-auto bg-emerald-500/20 rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="sprout" class="w-8 h-8 text-emerald-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-emerald-400">خطة المبتدئ</h3>
+                        <div class="mt-4">
+                            <span class="text-4xl font-bold">$5</span>
+                            <span class="text-gray-400">/ يوم واحد</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-emerald-400 w-5 h-5"></i>
+                            <span>عائد يومي: <strong class="text-emerald-400">$0.6</strong></span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-emerald-400 w-5 h-5"></i>
+                            <span>مدة العقد: يوم واحد</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-emerald-400 w-5 h-5"></i>
+                            <span>إجمالي الربح: $0.6</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-emerald-400 w-5 h-5"></i>
+                            <span>قوة التعدين: 100 GH/s</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full py-3 rounded-xl border-2 border-emerald-500 text-emerald-400 font-bold hover:bg-emerald-500 hover:text-white transition" onclick="selectPlan('beginner')">
+                        اختر الخطة
+                    </button>
+                </div>
+
+                <!-- Advanced Plan -->
+                <div class="glass-effect rounded-3xl p-8 card-hover border border-purple-500/30 relative overflow-hidden transform md:scale-105 z-10">
+                    <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-lg font-bold">
+                        الأكثر شعبية
+                    </div>
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-purple-600"></div>
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 mx-auto bg-purple-500/20 rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="cpu" class="w-8 h-8 text-purple-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-purple-400">خطة المتقدم</h3>
+                        <div class="mt-4">
+                            <span class="text-4xl font-bold">$20</span>
+                            <span class="text-gray-400">/ 3 أيام</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-purple-400 w-5 h-5"></i>
+                            <span>عائد يومي: <strong class="text-purple-400">$2.5</strong></span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-purple-400 w-5 h-5"></i>
+                            <span>مدة العقد: 3 أيام</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-purple-400 w-5 h-5"></i>
+                            <span>إجمالي الربح: $7.5</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-purple-400 w-5 h-5"></i>
+                            <span>قوة التعدين: 500 GH/s</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="gift" class="text-purple-400 w-5 h-5"></i>
+                            <span>بونص ترحيبي +$5</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full py-3 rounded-xl bg-purple-600 text-white font-bold hover:bg-purple-700 transition shadow-lg shadow-purple-500/30" onclick="selectPlan('advanced')">
+                        اختر الخطة
+                    </button>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="glass-effect rounded-3xl p-8 card-hover border border-yellow-500/30 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-yellow-600"></div>
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 mx-auto bg-yellow-500/20 rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="crown" class="w-8 h-8 text-yellow-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-yellow-400">خطة المحترف</h3>
+                        <div class="mt-4">
+                            <span class="text-4xl font-bold">$50</span>
+                            <span class="text-gray-400">/ 7 أيام</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-yellow-400 w-5 h-5"></i>
+                            <span>عائد يومي: <strong class="text-yellow-400">$8</strong></span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-yellow-400 w-5 h-5"></i>
+                            <span>مدة العقد: 7 أيام</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-yellow-400 w-5 h-5"></i>
+                            <span>إجمالي الربح: $56</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="check-circle" class="text-yellow-400 w-5 h-5"></i>
+                            <span>قوة التعدين: 2000 GH/s</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i data-lucide="zap" class="text-yellow-400 w-5 h-5"></i>
+                            <span>سحب فوري متاح</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full py-3 rounded-xl border-2 border-yellow-500 text-yellow-400 font-bold hover:bg-yellow-500 hover:text-black transition" onclick="selectPlan('pro')">
+                        اختر الخطة
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VIP Boost Section -->
+    <section id="vip" class="py-20 px-4 relative">
+        <div class="container mx-auto max-w-4xl">
+            <div class="vip-box rounded-3xl p-8 md:p-12 relative overflow-hidden animate-glow">
+                <!-- Decorative Elements -->
+                <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-500/20 rounded-full filter blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 bg-yellow-500/20 rounded-full filter blur-3xl"></div>
+                
+                <!-- Shimmer Effect -->
+                <div class="absolute inset-0 shimmer-bg opacity-30 animate-shimmer"></div>
+                
+                <div class="relative z-10 text-center">
+                    <div class="flex justify-center items-center gap-2 mb-4">
+                        <i data-lucide="zap" class="w-8 h-8 text-yellow-400 fill-yellow-400"></i>
+                        <h2 class="text-3xl md:text-4xl font-bold text-yellow-400">⚡ تسريع التعدين ⚡</h2>
+                        <i data-lucide="zap" class="w-8 h-8 text-yellow-400 fill-yellow-400"></i>
+                    </div>
+                    
+                    <div class="inline-block bg-red-500/20 border border-red-500/50 rounded-full px-4 py-1 mb-6">
+                        <span class="text-red-400 font-bold text-sm">عرض محدود الوقت</span>
+                    </div>
+                    
+                    <p class="text-xl md:text-2xl mb-8 text-gray-200">
+                        عرض VIP حصري! مضاعفة سرعة التعدين <span class="text-yellow-400 font-bold">3 مرات</span> 
+                        مع <span class="text-yellow-400 font-bold">سحب فوري</span> فوراً
+                    </p>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 mb-8 text-center">
+                        <div class="glass-effect rounded-xl p-4 border border-yellow-500/30">
+                            <i data-lucide="rocket" class="w-8 h-8 text-yellow-400 mx-auto mb-2"></i>
+                            <div class="font-bold">3x سرعة</div>
+                            <div class="text-sm text-gray-400">مضاعفة التعدين</div>
+                        </div>
+                        <div class="glass-effect rounded-xl p-4 border border-yellow-500/30">
+                            <i data-lucide="wallet" class="w-8 h-8 text-yellow-400 mx-auto mb-2"></i>
+                            <div class="font-bold">سحب فوري</div>
+                            <div class="text-sm text-gray-400">بدون انتظار</div>
+                        </div>
+                        <div class="glass-effect rounded-xl p-4 border border-yellow-500/30">
+                            <i data-lucide="headphones" class="w-8 h-8 text-yellow-400 mx-auto mb-2"></i>
+                            <div class="font-bold">دعم VIP</div>
+                            <div class="text-sm text-gray-400">أولوية 24/7</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Fake Counter -->
+                    <div class="mb-8 p-4 bg-black/30 rounded-xl border border-red-500/30">
+                        <div class="flex items-center justify-center gap-2 mb-2">
+                            <i data-lucide="alert-circle" class="text-red-400 w-5 h-5 animate-pulse"></i>
+                            <span class="text-red-400 font-bold">الطلبات محدودة!</span>
+                        </div>
+                        <div class="text-lg">
+                            عدد المشتركين المتبقي: 
+                            <span id="remainingCounter" class="countdown-pulse font-bold text-2xl">12</span>
+                            <span class="text-gray-400">فقط</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-2 mt-3 max-w-xs mx-auto">
+                            <div id="progressBar" class="bg-red-500 h-2 rounded-full transition-all duration-1000" style="width: 15%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <span class="text-gray-400 line-through text-2xl">$25</span>
+                        <div class="text-5xl font-bold text-yellow-400 mb-2">$5 فقط</div>
+                        <div class="text-sm text-gray-400">بدلاً من $25 - وفر 80%</div>
+                    </div>
+                    
+                    <button onclick="subscribeVIP()" class="w-full md:w-auto px-12 py-5 gold-gradient rounded-2xl font-bold text-xl text-white hover:shadow-2xl hover:shadow-yellow-500/50 transition transform hover:scale-105 flex items-center justify-center gap-3 mx-auto">
+                        <span>اشترك الآن بـ $5</span>
+                        <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                    </button>
+                    
+                    <div class="mt-6 flex justify-center items-center gap-4 text-sm text-gray-400">
+                        <div class="flex items-center gap-1">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-green-400"></i>
+                            <span>دفع آمن</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4 text-green-400"></i>
+                            <span>ضمان استعادة المال</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 px-4 bg-black/20">
+        <div class="container mx-auto">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-effect p-6 rounded-2xl text-center">
+                    <i data-lucide="smartphone" class="w-12 h-12 text-emerald-400 mx-auto mb-4"></i>
+                    <h3 class="font-bold text-lg mb-2">تطبيق سهل</h3>
+                    <p class="text-gray-400 text-sm">تحكم في تعدينك من أي مكان عبر الهاتف</p>
+                </div>
+                <div class="glass-effect p-6 rounded-2xl text-center">
+                    <i data-lucide="trending-up" class="w-12 h-12 text-purple-400 mx-auto mb-4"></i>
+                    <h3 class="font-bold text-lg mb-2">أرباح يومية</h3>
+                    <p class="text-gray-400 text-sm">استلم أرباحك كل يوم مباشرة لمحفظتك</p>
+                </div>
+                <div class="glass-effect p-6 rounded-2xl text-center">
+                    <i data-lucide="server" class="w-12 h-12 text-blue-400 mx-auto mb-4"></i>
+                    <h3 class="font-bold text-lg mb-2">خوادم قوية</h3>
+                    <p class="text-gray-400 text-sm">أحدث معدات التعدين في آيسلندا</p>
+                </div>
+                <div class="glass-effect p-6 rounded-2xl text-center">
+                    <i data-lucide="badge-percent" class="w-12 h-12 text-yellow-400 mx-auto mb-4"></i>
+                    <h3 class="font-bold text-lg mb-2">عمولة منخفضة</h3>
+                    <p class="text-gray-400 text-sm">أقل رسوم صيانة في السوق</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black/40 border-t border-white/10 py-12 px-4">
+        <div class="container mx-auto">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded-full gold-gradient flex items-center justify-center">
+                            <i data-lucide="pickaxe" class="text-white w-5 h-5"></i>
+                        </div>
+                        <span class="font-bold text-xl">GreenHash</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">منصة التعدين السحابي الأكثر موثوقية في العالم العربي.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-yellow-400">روابط سريعة</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white">عن الشركة</a></li>
+                        <li><a href="#" class="hover:text-white">خطط التعدين</a></li>
+                        <li><a href="#" class="hover:text-white">الأسئلة الشائعة</a></li>
+                        <li><a href="#" class="hover:text-white">المدونة</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-yellow-400">الدعم</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white">مركز المساعدة</a></li>
+                        <li><a href="#" class="hover:text-white">تواصل معنا</a></li>
+                        <li><a href="#" class="hover:text-white">شروط الاستخدام</a></li>
+                        <li><a href="#" class="hover:text-white">سياسة الخصوصية</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-yellow-400">تواصل معنا</h4>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 glass-effect rounded-full flex items-center justify-center hover:bg-yellow-500/20 transition">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 glass-effect rounded-full flex items-center justify-center hover:bg-yellow-500/20 transition">
+                            <i data-lucide="telegram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 glass-effect rounded-full flex items-center justify-center hover:bg-yellow-500/20 transition">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 text-center text-gray-400 text-sm">
+                <p>© 2024 GreenHash Mining. جميع الحقوق محفوظة.</p>
+                <p class="mt-2 text-xs">تحذير: التعدين ينطوي على مخاطر. استثمر بحذر.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="glass-effect rounded-2xl p-8 max-w-md w-full border border-yellow-500/30 relative">
+            <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto bg-yellow-500/20 rounded-full flex items-center justify-center mb-4">
+                    <i data-lucide="info" class="w-8 h-8 text-yellow-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4" id="modalTitle">تنبيه</h3>
+                <p class="text-gray-300 mb-6" id="modalText">يجب تسجيل الدخول أولاً</p>
+                <button onclick="closeModal()" class="gold-gradient px-8 py-3 rounded-full font-bold w-full">حسناً</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Fake Counter Animation
+        let counter = 12;
+        const counterElement = document.getElementById('remainingCounter');
+        const progressBar = document.getElementById('progressBar');
+        
+        setInterval(() => {
+            if (counter > 3 && Math.random() > 0.7) {
+                counter--;
+                counterElement.textContent = counter;
+                const percentage = (counter / 20) * 100;
+                progressBar.style.width = percentage + '%';
+                
+                // Flash effect
+                counterElement.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    counterElement.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }, 5000);
+
+        // Plan Selection
+        function selectPlan(plan) {
+            const modal = document.getElementById('modal');
+            const title = document.getElementById('modalTitle');
+            const text = document.getElementById('modalText');
+            
+            const plans = {
+                beginner: 'خطة المبتدئ - $5',
+                advanced: 'خطة المتقدم - $20',
+                pro: 'خطة المحترف - $50'
+            };
+            
+            title.textContent = 'تم اختيار الخطة';
+            text.textContent = `لقد اخترت ${plans[plan]}. سيتم تحويلك لصفحة الدفع.`;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // VIP Subscription
+        function subscribeVIP() {
+            const modal = document.getElementById('modal');
+            const title = document.getElementById('modalTitle');
+            const text = document.getElementById('modalText');
+            
+            title.textContent = '⚡ عرض VIP ⚡';
+            text.textContent = 'سيتم تفعيل التسريع فوراً بعد الدفع! Hurry up, only ' + counter + ' spots left!';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Close Modal
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Close mobile menu if open
+                    document.getElementById('mobileMenu').classList.add('hidden');
+                }
+            });
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('bg-black/80');
+            } else {
+                header.classList.remove('bg-black/80');
+            }
+        });
+
+        // Animate numbers on scroll
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-float');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card-hover').forEach((el) => observer.observe(el));
+    </script>
+<script src="https://deepsite.hf.co/deepsite-badge.js"></script>
+</body>
+</html>
